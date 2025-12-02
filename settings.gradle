@@ -1,0 +1,6 @@
+rootProject.name = 'board'
+
+include 'common'
+include 'service:user'
+include 'service:article'
+include 'service:comment'

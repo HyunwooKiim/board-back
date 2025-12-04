@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  user-service:
+    build:
+      context: ./service/user
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - board-network
+
+  article-service:
+    build:
+      context: ./service/article
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - board-network
+
+  comment-service:
+    build:
+      context: ./service/comment
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - board-network
+
+networks:
+  board-network:
+    driver: bridge

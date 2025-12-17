@@ -1,6 +1,40 @@
 version: '3.8'
 
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: board-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - board-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot1234"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  api-gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - board-network
+    depends_on:
+      - user-service
+      - article-service
+      - comment-service
+
   user-service:
     build:
       context: ./service/user
@@ -11,6 +45,9 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - board-network
+    depends_on:
+      mysql:
+        condition: service_healthy
 
   article-service:
     build:
@@ -22,6 +59,9 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - board-network
+    depends_on:
+      mysql:
+        condition: service_healthy
 
   comment-service:
     build:
@@ -33,7 +73,13 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - board-network
+    depends_on:
+      mysql:
+        condition: service_healthy
 
 networks:
   board-network:
     driver: bridge
+
+volumes:
+  mysql-data:

@@ -1,11 +1,11 @@
 server:
-  port: 8081
+  port: 8083
 
 spring:
   application:
-    name: user-service
+    name: comment-service
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:3306/userdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/commentdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: root1234
@@ -18,10 +18,12 @@ spring:
       hibernate:
         format_sql: true
 
+snowflake:
+  datacenter-id: 1
+  worker-id: 2
+
 jwt:
   secret: secret-key-must-be-at-least-256-bits-long-so-make-it-long-enough
-  access-token-validity: 3600000
-  refresh-token-validity: 86400000
 
 ---
 spring:
@@ -29,4 +31,4 @@ spring:
     activate:
       on-profile: docker
   datasource:
-    url: jdbc:mysql://mysql:3306/userdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://mysql:3306/commentdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true

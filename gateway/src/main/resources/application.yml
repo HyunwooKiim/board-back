@@ -1,0 +1,79 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        # User Service 라우팅
+        - id: user-service
+          uri: http://${USER_SERVICE_HOST:localhost}:8081
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - RewritePath=/api/users/(?<segment>.*), /v1/auth/${segment}
+
+        # Article Service 라우팅
+        - id: article-service
+          uri: http://${ARTICLE_SERVICE_HOST:localhost}:8082
+          predicates:
+            - Path=/api/articles/**
+          filters:
+            - RewritePath=/api/articles/(?<segment>.*), /${segment}
+
+        # Comment Service 라우팅
+        - id: comment-service
+          uri: http://${COMMENT_SERVICE_HOST:localhost}:8083
+          predicates:
+            - Path=/api/comments/**
+          filters:
+            - RewritePath=/api/comments/(?<segment>.*), /${segment}
+
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: false
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: http://user-service:8081
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - RewritePath=/api/users/(?<segment>.*), /v1/auth/${segment}
+
+        - id: article-service
+          uri: http://article-service:8082
+          predicates:
+            - Path=/api/articles/**
+          filters:
+            - RewritePath=/api/articles/(?<segment>.*), /${segment}
+
+        - id: comment-service
+          uri: http://comment-service:8083
+          predicates:
+            - Path=/api/comments/**
+          filters:
+            - RewritePath=/api/comments/(?<segment>.*), /${segment}

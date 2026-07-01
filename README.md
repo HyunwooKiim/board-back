@@ -116,3 +116,6 @@
 - **Atomic Commits**: 기능 단위로 최대한 작게 쪼개어 커밋하여, 문제 발생 시 추적과 롤백이 용이하도록 했습니다.
 - **Convention**: `feat`, `fix`, `refactor`, `docs`, `chore` 등의 접두어를 사용하여 커밋의 성격을 명확히 했습니다.
   - 예: `feat: 게시글 커서 페이징 조회 기능 구현`, `refactor: Snowflake ID 생성기 Singleton 패턴 적용`
+ 
+
+https://yeopeva.notion.site/15-31bce72a82cd8008a711f0b5318e096b
